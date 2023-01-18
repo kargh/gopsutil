@@ -1,4 +1,4 @@
-module github.com/kargh/gopsutil
+module github.com/kargh/gopsutil/v3
 
 go 1.15
 
