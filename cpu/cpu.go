@@ -154,6 +154,10 @@ func PercentCpuTimes(interval time.Duration, percpu bool) ([]float64, error) {
 	return PercentWithContext(context.Background(), interval, percpu)
 }
 
+func PercentCpuTimes2(interval time.Duration, percpu bool) ([]float64, error) {
+	return PercentWithContext(context.Background(), interval, percpu)
+}
+
 func PercentWithContext(ctx context.Context, interval time.Duration, percpu bool) ([]float64, error) {
 	if interval <= 0 {
 		return percentUsedFromLastCallWithContext(ctx, percpu)
