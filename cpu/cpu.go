@@ -114,6 +114,7 @@ func getAllBusy(t TimesStat) (float64, float64) {
 }
 
 func calculateBusy(t1, t2 TimesStat) float64 {
+	fmt.Println(t1)
 	t1All, t1Busy := getAllBusy(t1)
 	t2All, t2Busy := getAllBusy(t2)
 
