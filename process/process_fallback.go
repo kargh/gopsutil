@@ -7,9 +7,9 @@ import (
 	"context"
 	"syscall"
 
-	"github.com/shirou/gopsutil/v3/cpu"
-	"github.com/shirou/gopsutil/v3/internal/common"
-	"github.com/shirou/gopsutil/v3/net"
+	"github.com/kargh/gopsutil/v3/cpu"
+	"github.com/kargh/gopsutil/v3/internal/common"
+	"github.com/kargh/gopsutil/v3/net"
 )
 
 type Signal = syscall.Signal
