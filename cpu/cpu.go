@@ -102,6 +102,7 @@ func (c InfoStat) String() string {
 }
 
 func getAllBusy(t TimesStat) (float64, float64) {
+	fmt.Println("t:", t)
 	tot := t.Total()
 	if runtime.GOOS == "linux" {
 		tot -= t.Guest     // Linux 2.6.24+
@@ -114,7 +115,6 @@ func getAllBusy(t TimesStat) (float64, float64) {
 }
 
 func calculateBusy(t1, t2 TimesStat) float64 {
-	fmt.Println(t1)
 	t1All, t1Busy := getAllBusy(t1)
 	t2All, t2Busy := getAllBusy(t2)
 
