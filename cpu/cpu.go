@@ -100,7 +100,7 @@ func UsedTime(t1, t2 TimesStat) {
 	fmt.Println("t1:", t1)
 	fmt.Println("t2:", t2)
 
-	var usedTime []TimesStat
+	var usedTime TimesStat
 
 	usedTime.User = t2.User - t1.User
 	usedTime.System = t2.System - t1.System
