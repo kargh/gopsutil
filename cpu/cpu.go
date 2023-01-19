@@ -96,13 +96,29 @@ func (c TimesStat) Total() float64 {
 	return total
 }
 
+func (t1, t2  TimesStat) UsedTime() string {
+	var usedTime []TimeStat
+
+	usedTime.user = t2.User - t1.User
+	usedTime.system = t2.System - t1.System
+	usedTime.idle = t2.Idle - t1.Idle
+	usedTime.nice = t2.Nice - t1.Nice
+	usedTime.iowait = t2.Iowait - t1.Iowait
+	usedTime.irq = t2.Irq - t1.Irq
+	usedTime.softirq = t2.Softirq - t1.Softirq
+	usedTime.steal = t2.Steal - t1.Steal
+	usedTime.guest = t2.Guest - t1.Guest
+	usedTime.guestNice = t2.GuestNice - t1.GuestNice
+
+	fmt.Println("usedTime:", usedTime)
+}
+
 func (c InfoStat) String() string {
 	s, _ := json.Marshal(c)
 	return string(s)
 }
 
 func getAllBusy(t TimesStat) (float64, float64) {
-	fmt.Println("t:", t)
 	tot := t.Total()
 	if runtime.GOOS == "linux" {
 		tot -= t.Guest     // Linux 2.6.24+
@@ -115,6 +131,7 @@ func getAllBusy(t TimesStat) (float64, float64) {
 }
 
 func calculateBusy(t1, t2 TimesStat) float64 {
+	UsedTime(t1, t2)
 	t1All, t1Busy := getAllBusy(t1)
 	t2All, t2Busy := getAllBusy(t2)
 
