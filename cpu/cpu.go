@@ -96,7 +96,7 @@ func (c TimesStat) Total() float64 {
 	return total
 }
 
-func UsedTime(t1, t2 TimesStat) {
+func UsedTime(t1, t2 TimesStat) ([]TimesStat, error) {
 	var usedTime TimesStat
 
 	usedTime.User = t2.User - t1.User
@@ -116,7 +116,7 @@ func UsedTime(t1, t2 TimesStat) {
                 tot -= usedTime.GuestNice // Linux 3.2.0+
         }
 
-        busy := tot - usedTime.Idle - usedTime.Iowait
+        //busy := tot - usedTime.Idle - usedTime.Iowait
 
 	usedTime.User = math.Min(100, math.Max(0, usedTime.User/tot*100))
 	usedTime.System = math.Min(100, math.Max(0, usedTime.System/tot*100))
@@ -187,7 +187,8 @@ func calculateAllBusyMode(t1, t2 []TimesStat) ([]TimesStat, error) {
 		)
 	}
 
-	ret := make([]float64, len(t1))
+	//ret := make([]TimesStat, len(t1))
+	ret := []TimesStat
 	for i, t := range t2 {
 		ret[i] = UsedTime(t1[i], t)
 	}
