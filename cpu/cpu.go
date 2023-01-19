@@ -129,8 +129,7 @@ func UsedTime(t1, t2 TimesStat) {
 	usedTime.Guest = math.Min(100, math.Max(0, usedTime.Guest/tot*100))
 	usedTime.GuestNice = math.Min(100, math.Max(0, usedTime.GuestNice/tot*100))
 
-	fmt.Println("usedTime:", usedTime)
-	fmt.Println("UsedPct:", math.Min(100, math.Max(0, busy/tot*100)))
+	return usedTime, nil
 }
 
 func (c InfoStat) String() string {
@@ -151,7 +150,6 @@ func getAllBusy(t TimesStat) (float64, float64) {
 }
 
 func calculateBusy(t1, t2 TimesStat) float64 {
-	UsedTime(t1, t2)
 	t1All, t1Busy := getAllBusy(t1)
 	t2All, t2Busy := getAllBusy(t2)
 
@@ -180,6 +178,22 @@ func calculateAllBusy(t1, t2 []TimesStat) ([]float64, error) {
 	return ret, nil
 }
 
+func calculateAllBusyMode(t1, t2 []TimesStat) ([]TimesStat, error) {
+	// Make sure the CPU measurements have the same length.
+	if len(t1) != len(t2) {
+		return nil, fmt.Errorf(
+			"received two CPU counts: %d != %d",
+			len(t1), len(t2),
+		)
+	}
+
+	ret := make([]float64, len(t1))
+	for i, t := range t2 {
+		ret[i] = UsedTime(t1[i], t)
+	}
+	return ret, nil
+}
+
 // Percent calculates the percentage of cpu used either per CPU or combined.
 // If an interval of 0 is given it will compare the current cpu times against the last call.
 // Returns one value per cpu, or a single value if percpu is set to false.
@@ -187,12 +201,12 @@ func Percent(interval time.Duration, percpu bool) ([]float64, error) {
 	return PercentWithContext(context.Background(), interval, percpu)
 }
 
-func PercentCpuTimes(interval time.Duration, percpu bool) ([]float64, error) {
-	return PercentWithContext(context.Background(), interval, percpu)
+func PercentCpuTimes(interval time.Duration, percpu bool) ([]TimesStat, error) {
+	return PercentWithContextMode(context.Background(), interval, percpu)
 }
 
-func PercentCpuTimes2(interval time.Duration, percpu bool) ([]float64, error) {
-	return PercentWithContext(context.Background(), interval, percpu)
+func PercentCpuTimes2(interval time.Duration, percpu bool) ([]TimesStat, error) {
+	return PercentWithContextMode(context.Background(), interval, percpu)
 }
 
 func PercentWithContext(ctx context.Context, interval time.Duration, percpu bool) ([]float64, error) {
@@ -219,6 +233,10 @@ func PercentWithContext(ctx context.Context, interval time.Duration, percpu bool
 	return calculateAllBusy(cpuTimes1, cpuTimes2)
 }
 
+func PercentWithContextMode(ctx context.Context, interval time.Duration, percpu bool) ([]TimesStat, error) {
+	return percentUsedFromLastCallWithContextMode(ctx, percpu)
+}
+
 func percentUsedFromLastCall(percpu bool) ([]float64, error) {
 	return percentUsedFromLastCallWithContext(context.Background(), percpu)
 }
@@ -243,4 +261,26 @@ func percentUsedFromLastCallWithContext(ctx context.Context, percpu bool) ([]flo
 		return nil, fmt.Errorf("error getting times for cpu percent. lastTimes was nil")
 	}
 	return calculateAllBusy(lastTimes, cpuTimes)
+}
+
+func percentUsedFromLastCallWithContextMode(ctx context.Context, percpu bool) ([]TimesStat, error) {
+	cpuTimes, err := TimesWithContext(ctx, percpu)
+	if err != nil {
+		return nil, err
+	}
+	lastCPUPercent.Lock()
+	defer lastCPUPercent.Unlock()
+	var lastTimes []TimesStat
+	if percpu {
+		lastTimes = lastCPUPercent.lastPerCPUTimes
+		lastCPUPercent.lastPerCPUTimes = cpuTimes
+	} else {
+		lastTimes = lastCPUPercent.lastCPUTimes
+		lastCPUPercent.lastCPUTimes = cpuTimes
+	}
+
+	if lastTimes == nil {
+		return nil, fmt.Errorf("error getting times for cpu percent. lastTimes was nil")
+	}
+	return calculateAllBusyMode(lastTimes, cpuTimes)
 }
