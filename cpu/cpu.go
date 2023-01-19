@@ -96,7 +96,10 @@ func (c TimesStat) Total() float64 {
 	return total
 }
 
-//func (t1, t2 TimesStat) UsedTime() {
+func (t1, t2) UsedTime() {
+	fmt.Println("t1:", t1)
+	fmt.Println("t2:", t2)
+
 //	var usedTime []TimesStat
 
 //	usedTime.User = t2.User - t1.User
@@ -109,9 +112,9 @@ func (c TimesStat) Total() float64 {
 //	usedTime.Steal = t2.Steal - t1.Steal
 //	usedTime.Guest = t2.Guest - t1.Guest
 //	usedTime.GuestNice = t2.GuestNice - t1.GuestNice
-//
+
 //	fmt.Println("usedTime:", usedTime)
-//}
+}
 
 func (c InfoStat) String() string {
 	s, _ := json.Marshal(c)
@@ -131,9 +134,7 @@ func getAllBusy(t TimesStat) (float64, float64) {
 }
 
 func calculateBusy(t1, t2 TimesStat) float64 {
-	fmt.Println("t1:", t1)
-	fmt.Println("t2:", t2)
-	//UsedTime(t1, t2)
+	UsedTime(t1, t2)
 	t1All, t1Busy := getAllBusy(t1)
 	t2All, t2Busy := getAllBusy(t2)
 
