@@ -96,7 +96,7 @@ func (c TimesStat) Total() float64 {
 	return total
 }
 
-func UsedTime(t1, t2 TimesStat) (TimesStat, error) {
+func UsedTime(t1, t2 TimesStat) (TimesStat) {
 	var usedTime TimesStat
 
 	usedTime.User = t2.User - t1.User
@@ -129,7 +129,7 @@ func UsedTime(t1, t2 TimesStat) (TimesStat, error) {
 	usedTime.Guest = math.Min(100, math.Max(0, usedTime.Guest/tot*100))
 	usedTime.GuestNice = math.Min(100, math.Max(0, usedTime.GuestNice/tot*100))
 
-	return usedTime, nil
+	return usedTime
 }
 
 func (c InfoStat) String() string {
@@ -180,17 +180,17 @@ func calculateAllBusy(t1, t2 []TimesStat) ([]float64, error) {
 
 func calculateAllBusyMode(t1, t2 []TimesStat) (TimesStat, error) {
 	// Make sure the CPU measurements have the same length.
-	if len(t1) != len(t2) {
-		return _, fmt.Errorf(
-			"received two CPU counts: %d != %d",
-			len(t1), len(t2),
-		)
-	}
+	//if len(t1) != len(t2) {
+	//	return _, fmt.Errorf(
+	//		"received two CPU counts: %d != %d",
+	//		len(t1), len(t2),
+	//	)
+	//}
 
 	//ret := make([]TimesStat, len(t1))
-	ret := TimesStat
+	var ret TimesStat
 	for i, t := range t2 {
-		ret,_ = UsedTime(t1[i], t)
+		ret = UsedTime(t1[i], t)
 	}
 	return ret, nil
 }
@@ -266,9 +266,9 @@ func percentUsedFromLastCallWithContext(ctx context.Context, percpu bool) ([]flo
 
 func percentUsedFromLastCallWithContextMode(ctx context.Context, percpu bool) (TimesStat, error) {
 	cpuTimes, err := TimesWithContext(ctx, percpu)
-	if err != nil {
-		return _, err
-	}
+	//if err != nil {
+	//	return _, err
+	//}
 	lastCPUPercent.Lock()
 	defer lastCPUPercent.Unlock()
 	var lastTimes []TimesStat
@@ -280,8 +280,8 @@ func percentUsedFromLastCallWithContextMode(ctx context.Context, percpu bool) (T
 		lastCPUPercent.lastCPUTimes = cpuTimes
 	}
 
-	if lastTimes == nil {
-		return _, fmt.Errorf("error getting times for cpu percent. lastTimes was nil")
-	}
+	//if lastTimes == nil {
+	//	return _, fmt.Errorf("error getting times for cpu percent. lastTimes was nil")
+	//}
 	return calculateAllBusyMode(lastTimes, cpuTimes)
 }
