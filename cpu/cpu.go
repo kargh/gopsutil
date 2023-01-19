@@ -100,20 +100,20 @@ func UsedTime(t1, t2 TimesStat) {
 	fmt.Println("t1:", t1)
 	fmt.Println("t2:", t2)
 
-//	var usedTime []TimesStat
+	var usedTime []TimesStat
 
-//	usedTime.User = t2.User - t1.User
-//	usedTime.System = t2.System - t1.System
-//	usedTime.Idle = t2.Idle - t1.Idle
-//	usedTime.Nice = t2.Nice - t1.Nice
-//	usedTime.Iowait = t2.Iowait - t1.Iowait
-//	usedTime.Irq = t2.Irq - t1.Irq
-//	usedTime.Softirq = t2.Softirq - t1.Softirq
-//	usedTime.Steal = t2.Steal - t1.Steal
-//	usedTime.Guest = t2.Guest - t1.Guest
-//	usedTime.GuestNice = t2.GuestNice - t1.GuestNice
+	usedTime.User = t2.User - t1.User
+	usedTime.System = t2.System - t1.System
+	usedTime.Idle = t2.Idle - t1.Idle
+	usedTime.Nice = t2.Nice - t1.Nice
+	usedTime.Iowait = t2.Iowait - t1.Iowait
+	usedTime.Irq = t2.Irq - t1.Irq
+	usedTime.Softirq = t2.Softirq - t1.Softirq
+	usedTime.Steal = t2.Steal - t1.Steal
+	usedTime.Guest = t2.Guest - t1.Guest
+	usedTime.GuestNice = t2.GuestNice - t1.GuestNice
 
-//	fmt.Println("usedTime:", usedTime)
+	fmt.Println("usedTime:", usedTime)
 }
 
 func (c InfoStat) String() string {
