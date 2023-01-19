@@ -97,7 +97,7 @@ func (c TimesStat) Total() float64 {
 }
 
 func (t1, t2  TimesStat) UsedTime() string {
-	var usedTime []TimeStat
+	var usedTime []TimesStat
 
 	usedTime.user = t2.User - t1.User
 	usedTime.system = t2.System - t1.System
