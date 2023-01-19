@@ -96,7 +96,7 @@ func (c TimesStat) Total() float64 {
 	return total
 }
 
-func (t1, t2) UsedTime() {
+func UsedTime(t1, t2) {
 	fmt.Println("t1:", t1)
 	fmt.Println("t2:", t2)
 
