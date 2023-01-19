@@ -265,7 +265,7 @@ func percentUsedFromLastCallWithContext(ctx context.Context, percpu bool) ([]flo
 }
 
 func percentUsedFromLastCallWithContextMode(ctx context.Context, percpu bool) (TimesStat, error) {
-	cpuTimes, err := TimesWithContext(ctx, percpu)
+	cpuTimes, _ := TimesWithContext(ctx, percpu)
 	//if err != nil {
 	//	return _, err
 	//}
