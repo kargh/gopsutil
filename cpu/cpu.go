@@ -181,14 +181,14 @@ func calculateAllBusy(t1, t2 []TimesStat) ([]float64, error) {
 func calculateAllBusyMode(t1, t2 []TimesStat) (TimesStat, error) {
 	// Make sure the CPU measurements have the same length.
 	if len(t1) != len(t2) {
-		return nil, fmt.Errorf(
+		return _, fmt.Errorf(
 			"received two CPU counts: %d != %d",
 			len(t1), len(t2),
 		)
 	}
 
 	//ret := make([]TimesStat, len(t1))
-	ret := []TimesStat
+	ret := TimesStat
 	for i, t := range t2 {
 		ret,_ = UsedTime(t1[i], t)
 	}
@@ -267,7 +267,7 @@ func percentUsedFromLastCallWithContext(ctx context.Context, percpu bool) ([]flo
 func percentUsedFromLastCallWithContextMode(ctx context.Context, percpu bool) (TimesStat, error) {
 	cpuTimes, err := TimesWithContext(ctx, percpu)
 	if err != nil {
-		return nil, err
+		return _, err
 	}
 	lastCPUPercent.Lock()
 	defer lastCPUPercent.Unlock()
@@ -281,7 +281,7 @@ func percentUsedFromLastCallWithContextMode(ctx context.Context, percpu bool) (T
 	}
 
 	if lastTimes == nil {
-		return nil, fmt.Errorf("error getting times for cpu percent. lastTimes was nil")
+		return _, fmt.Errorf("error getting times for cpu percent. lastTimes was nil")
 	}
 	return calculateAllBusyMode(lastTimes, cpuTimes)
 }
