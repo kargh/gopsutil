@@ -110,7 +110,7 @@ func UsedTime(t1, t2 TimesStat) {
 	usedTime.Guest = t2.Guest - t1.Guest
 	usedTime.GuestNice = t2.GuestNice - t1.GuestNice
 
-	tot = usedTime.Total()
+	tot := usedTime.Total()
         if runtime.GOOS == "linux" {
                 tot -= usedTime.Guest     // Linux 2.6.24+
                 tot -= usedTime.GuestNice // Linux 3.2.0+
@@ -118,16 +118,16 @@ func UsedTime(t1, t2 TimesStat) {
 
         busy := tot - usedTime.Idle - usedTime.Iowait
 
-	usedTime.User = math.Min(100, math.Max(0, userTime.User/tot*100))
-	usedTime.System = math.Min(100, math.Max(0, userTime.System/tot*100))
-	usedTime.Idle = math.Min(100, math.Max(0, userTime.Idle/tot*100))
-	usedTime.Nice = math.Min(100, math.Max(0, userTime.Nice/tot*100))
-	usedTime.Iowait = math.Min(100, math.Max(0, userTime.Iowait/tot*100))
-	usedTime.Irq = math.Min(100, math.Max(0, userTime.Irq/tot*100))
-	usedTime.Softirq = math.Min(100, math.Max(0, userTime.Softirq/tot*100))
-	usedTime.Steal = math.Min(100, math.Max(0, userTime.Steal/tot*100))
-	usedTime.Guest = math.Min(100, math.Max(0, userTime.Guest/tot*100))
-	usedTime.GuestNice = math.Min(100, math.Max(0, userTime.GuestNice/tot*100))
+	usedTime.User = math.Min(100, math.Max(0, usedTime.User/tot*100))
+	usedTime.System = math.Min(100, math.Max(0, usedTime.System/tot*100))
+	usedTime.Idle = math.Min(100, math.Max(0, usedTime.Idle/tot*100))
+	usedTime.Nice = math.Min(100, math.Max(0, usedTime.Nice/tot*100))
+	usedTime.Iowait = math.Min(100, math.Max(0, usedTime.Iowait/tot*100))
+	usedTime.Irq = math.Min(100, math.Max(0, usedTime.Irq/tot*100))
+	usedTime.Softirq = math.Min(100, math.Max(0, usedTime.Softirq/tot*100))
+	usedTime.Steal = math.Min(100, math.Max(0, usedTime.Steal/tot*100))
+	usedTime.Guest = math.Min(100, math.Max(0, usedTime.Guest/tot*100))
+	usedTime.GuestNice = math.Min(100, math.Max(0, usedTime.GuestNice/tot*100))
 
 	fmt.Println("usedTime:", usedTime)
 	fmt.Println("UsedPct:", math.Min(100, math.Max(0, busy/tot*100)))
