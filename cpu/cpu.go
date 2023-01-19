@@ -96,22 +96,22 @@ func (c TimesStat) Total() float64 {
 	return total
 }
 
-func (t1, t2  TimesStat) UsedTime() string {
-	var usedTime []TimesStat
+//func (t1, t2 TimesStat) UsedTime() {
+//	var usedTime []TimesStat
 
-	usedTime.user = t2.User - t1.User
-	usedTime.system = t2.System - t1.System
-	usedTime.idle = t2.Idle - t1.Idle
-	usedTime.nice = t2.Nice - t1.Nice
-	usedTime.iowait = t2.Iowait - t1.Iowait
-	usedTime.irq = t2.Irq - t1.Irq
-	usedTime.softirq = t2.Softirq - t1.Softirq
-	usedTime.steal = t2.Steal - t1.Steal
-	usedTime.guest = t2.Guest - t1.Guest
-	usedTime.guestNice = t2.GuestNice - t1.GuestNice
-
-	fmt.Println("usedTime:", usedTime)
-}
+//	usedTime.User = t2.User - t1.User
+//	usedTime.System = t2.System - t1.System
+//	usedTime.Idle = t2.Idle - t1.Idle
+//	usedTime.Nice = t2.Nice - t1.Nice
+//	usedTime.Iowait = t2.Iowait - t1.Iowait
+//	usedTime.Irq = t2.Irq - t1.Irq
+//	usedTime.Softirq = t2.Softirq - t1.Softirq
+//	usedTime.Steal = t2.Steal - t1.Steal
+//	usedTime.Guest = t2.Guest - t1.Guest
+//	usedTime.GuestNice = t2.GuestNice - t1.GuestNice
+//
+//	fmt.Println("usedTime:", usedTime)
+//}
 
 func (c InfoStat) String() string {
 	s, _ := json.Marshal(c)
@@ -131,7 +131,9 @@ func getAllBusy(t TimesStat) (float64, float64) {
 }
 
 func calculateBusy(t1, t2 TimesStat) float64 {
-	UsedTime(t1, t2)
+	fmt.Println("t1:", t1)
+	fmt.Println("t2:", t2)
+	//UsedTime(t1, t2)
 	t1All, t1Busy := getAllBusy(t1)
 	t2All, t2Busy := getAllBusy(t2)
 
