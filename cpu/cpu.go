@@ -96,7 +96,7 @@ func (c TimesStat) Total() float64 {
 	return total
 }
 
-func UsedTime(t1, t2 TimesStat) ([]TimesStat, error) {
+func UsedTime(t1, t2 TimesStat) (TimesStat, error) {
 	var usedTime TimesStat
 
 	usedTime.User = t2.User - t1.User
@@ -178,7 +178,7 @@ func calculateAllBusy(t1, t2 []TimesStat) ([]float64, error) {
 	return ret, nil
 }
 
-func calculateAllBusyMode(t1, t2 []TimesStat) ([]TimesStat, error) {
+func calculateAllBusyMode(t1, t2 []TimesStat) (TimesStat, error) {
 	// Make sure the CPU measurements have the same length.
 	if len(t1) != len(t2) {
 		return nil, fmt.Errorf(
@@ -190,7 +190,7 @@ func calculateAllBusyMode(t1, t2 []TimesStat) ([]TimesStat, error) {
 	//ret := make([]TimesStat, len(t1))
 	ret := []TimesStat
 	for i, t := range t2 {
-		ret[i] = UsedTime(t1[i], t)
+		ret,_ = UsedTime(t1[i], t)
 	}
 	return ret, nil
 }
@@ -202,11 +202,11 @@ func Percent(interval time.Duration, percpu bool) ([]float64, error) {
 	return PercentWithContext(context.Background(), interval, percpu)
 }
 
-func PercentCpuTimes(interval time.Duration, percpu bool) ([]TimesStat, error) {
+func PercentCpuTimes(interval time.Duration, percpu bool) (TimesStat, error) {
 	return PercentWithContextMode(context.Background(), interval, percpu)
 }
 
-func PercentCpuTimes2(interval time.Duration, percpu bool) ([]TimesStat, error) {
+func PercentCpuTimes2(interval time.Duration, percpu bool) (TimesStat, error) {
 	return PercentWithContextMode(context.Background(), interval, percpu)
 }
 
@@ -234,7 +234,7 @@ func PercentWithContext(ctx context.Context, interval time.Duration, percpu bool
 	return calculateAllBusy(cpuTimes1, cpuTimes2)
 }
 
-func PercentWithContextMode(ctx context.Context, interval time.Duration, percpu bool) ([]TimesStat, error) {
+func PercentWithContextMode(ctx context.Context, interval time.Duration, percpu bool) (TimesStat, error) {
 	return percentUsedFromLastCallWithContextMode(ctx, percpu)
 }
 
@@ -264,7 +264,7 @@ func percentUsedFromLastCallWithContext(ctx context.Context, percpu bool) ([]flo
 	return calculateAllBusy(lastTimes, cpuTimes)
 }
 
-func percentUsedFromLastCallWithContextMode(ctx context.Context, percpu bool) ([]TimesStat, error) {
+func percentUsedFromLastCallWithContextMode(ctx context.Context, percpu bool) (TimesStat, error) {
 	cpuTimes, err := TimesWithContext(ctx, percpu)
 	if err != nil {
 		return nil, err
